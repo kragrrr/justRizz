@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { Instagram, Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { login } from '@/lib/utils';
 
 interface LoginScreenProps {
-  onLogin: () => void;
+  onLogin: (sessionToken: string) => void;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
@@ -13,16 +13,24 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate authentication delay
-    setTimeout(() => {
+    setError(null);
+    try {
+      const sessionToken = await login(username, password);
       setIsLoading(false);
-      onLogin();
-    }, 2000);
+      onLogin(sessionToken);
+    } catch (err: unknown) {
+      setIsLoading(false);
+      if (err instanceof Error) {
+        setError(err.message || 'Login failed');
+      } else {
+        setError('Login failed');
+      }
+    }
   };
 
   return (
@@ -72,6 +80,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           </button>
         </div>
 
+        {error && (
+          <div className="text-red-400 text-sm text-center">{error}</div>
+        )}
         <Button
           type="submit"
           disabled={isLoading}
