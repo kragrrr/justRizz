@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import LoginScreen from '../components/LoginScreen';
 import ContactList from '../components/ContactList';
 import AnalysisScreen from '../components/AnalysisScreen';
 import ResultsScreen from '../components/ResultsScreen';
-import type { Contact, AnalysisResult } from '../lib/utils';
 
 type Screen = 'login' | 'contacts' | 'analysis' | 'results';
 
@@ -18,11 +18,9 @@ interface SelectedContact {
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [selectedContact, setSelectedContact] = useState<SelectedContact | null>(null);
-  const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
-  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [analysisData, setAnalysisData] = useState<any>(null);
 
-  const handleLogin = (token: string) => {
-    setSessionToken(token);
+  const handleLogin = () => {
     setCurrentScreen('contacts');
   };
 
@@ -31,7 +29,7 @@ const Index = () => {
     setCurrentScreen('analysis');
   };
 
-  const handleAnalysisComplete = (data: AnalysisResult) => {
+  const handleAnalysisComplete = (data: any) => {
     setAnalysisData(data);
     setCurrentScreen('results');
   };
@@ -53,13 +51,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {currentScreen === 'login' && <LoginScreen onLogin={handleLogin} />}
-      {currentScreen === 'contacts' && sessionToken && (
-        <ContactList sessionToken={sessionToken} onContactSelect={handleContactSelect} onBack={handleBack} />
+      {currentScreen === 'contacts' && (
+        <ContactList onContactSelect={handleContactSelect} onBack={handleBack} />
       )}
-      {currentScreen === 'analysis' && selectedContact && sessionToken && (
+      {currentScreen === 'analysis' && selectedContact && (
         <AnalysisScreen
           contact={selectedContact}
-          sessionToken={sessionToken}
           onAnalysisComplete={handleAnalysisComplete}
           onBack={handleBack}
         />

@@ -1,8 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, MessageSquare, User, Zap, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { analyzeContact } from '@/lib/utils';
 
 interface Contact {
   id: string;
@@ -12,18 +12,9 @@ interface Contact {
   rizzScore: number;
 }
 
-interface AnalysisResult {
-  messages: { sender: string; text: string; time: string; sentiment: string }[];
-  profile: { bio: string; interests: string[]; dominantColors: string[] };
-  rizzScore: number;
-  insights: string[];
-  pickupLines: string[];
-}
-
 interface AnalysisScreenProps {
   contact: Contact;
-  sessionToken: string;
-  onAnalysisComplete: (data: AnalysisResult) => void;
+  onAnalysisComplete: (data: any) => void;
   onBack: () => void;
 }
 
@@ -34,7 +25,7 @@ interface AnalysisStep {
   status: 'pending' | 'processing' | 'complete';
 }
 
-const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, onAnalysisComplete, onBack }) => {
+const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, onAnalysisComplete, onBack }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   
@@ -59,54 +50,93 @@ const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, 
     }
   ]);
 
+  // Mock chat messages
+  const mockMessages = [
+    { sender: 'them', text: 'Hey! How was your hiking trip?', time: '2:30 PM', sentiment: 'positive' },
+    { sender: 'you', text: 'Amazing! The view from the summit was incredible 🏔️', time: '2:32 PM', sentiment: 'positive' },
+    { sender: 'them', text: 'I saw your story! That sunrise looked breathtaking', time: '2:35 PM', sentiment: 'positive' },
+    { sender: 'you', text: 'Right? Worth the 5am wake up call 😅', time: '2:36 PM', sentiment: 'positive' },
+    { sender: 'them', text: 'I need to plan a trip like that soon', time: '2:40 PM', sentiment: 'neutral' },
+  ];
+
+  const mockProfileData = {
+    bio: 'Adventure seeker ⛰️ | Coffee enthusiast ☕ | Dog mom 🐕',
+    interests: ['hiking', 'coffee', 'photography', 'travel', 'dogs'],
+    dominantColors: ['#8B4513', '#228B22', '#4169E1']
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    const runAnalysis = async () => {
-      setSteps(prev => prev.map((step, idx) => idx === 0 ? { ...step, status: 'processing' } : step));
-      setProgress(10);
-      try {
-        const result = await analyzeContact(sessionToken, contact.username);
-        if (!isMounted) return;
-        setSteps(prev => prev.map((step, idx) => idx === 0 ? { ...step, status: 'complete' } : step));
+    const processAnalysis = async () => {
+      // Step 1: Chat history
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 0 ? { ...step, status: 'processing' } : step
+        ));
+        setProgress(10);
+      }, 500);
+
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 0 ? { ...step, status: 'complete' } : step
+        ));
         setProgress(33);
         setCurrentStep(1);
-        setSteps(prev => prev.map((step, idx) => idx === 1 ? { ...step, status: 'processing' } : step));
+      }, 2000);
+
+      // Step 2: Profile scan
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 1 ? { ...step, status: 'processing' } : step
+        ));
+        setProgress(40);
+      }, 2500);
+
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 1 ? { ...step, status: 'complete' } : step
+        ));
         setProgress(66);
         setCurrentStep(2);
-        setSteps(prev => prev.map((step, idx) => idx === 1 ? { ...step, status: 'complete' } : step));
-        setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'processing' } : step));
-        setProgress(90);
-        setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'complete' } : step));
+      }, 4000);
+
+      // Step 3: AI generation
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 2 ? { ...step, status: 'processing' } : step
+        ));
+        setProgress(70);
+      }, 4500);
+
+      setTimeout(() => {
+        setSteps(prev => prev.map((step, idx) => 
+          idx === 2 ? { ...step, status: 'complete' } : step
+        ));
         setProgress(100);
-        // Adapt backend result to expected frontend format
+        
+        // Complete analysis
         const analysisResult = {
-          messages: result.chat_history?.map((text: string) => ({ sender: 'them', text, time: '', sentiment: 'neutral' })) || [],
-          profile: {
-            bio: result.profile?.bio || '',
-            interests: result.profile?.bio_keywords || [],
-            dominantColors: result.profile?.color_palette || []
-          },
-          rizzScore: result.rizz_score || 0,
-          insights: result.insights || [],
-          pickupLines: result.pickup_lines || []
+          messages: mockMessages,
+          profile: mockProfileData,
+          rizzScore: contact.rizzScore,
+          insights: [
+            'They love outdoor adventures and hiking',
+            'Coffee is a shared interest you can bond over',
+            'They appreciate genuine enthusiasm in conversations',
+            'Visual storytelling (photos) resonates well with them'
+          ],
+          pickupLines: [
+            "I saw you love hiking - want to explore some trails together over coffee? ⛰️☕",
+            "Your adventure photos are incredible! I'd love to hear the stories behind them",
+            "Fellow coffee enthusiast here - know any good spots for a morning brew before a hike?"
+          ]
         };
+        
         onAnalysisComplete(analysisResult);
-      } catch (err) {
-        // TODO: handle error UI
-        setProgress(100);
-        setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'complete' } : step));
-        onAnalysisComplete({
-          messages: [],
-          profile: { bio: '', interests: [], dominantColors: [] },
-          rizzScore: 0,
-          insights: ['Analysis failed'],
-          pickupLines: []
-        });
-      }
+      }, 6500);
     };
-    runAnalysis();
-    return () => { isMounted = false; };
-  }, [contact, sessionToken, onAnalysisComplete]);
+
+    processAnalysis();
+  }, [contact, onAnalysisComplete]);
 
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
@@ -162,12 +192,15 @@ const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, 
               Chat Preview
             </h3>
             <div className="space-y-3 max-h-64 overflow-y-auto">
-              {steps.map((step, idx) => (
+              {mockMessages.map((message, idx) => (
                 <div
-                  key={step.id}
-                  className={`p-3 rounded-lg border ${getSentimentColor(step.id === 'chat' ? 'neutral' : 'positive')}`}
+                  key={idx}
+                  className={`p-3 rounded-lg border ${getSentimentColor(message.sentiment)} ${
+                    message.sender === 'you' ? 'ml-8' : 'mr-8'
+                  }`}
                 >
-                  <p className="text-sm">{step.id === 'chat' ? 'Loading chat history...' : 'Loading profile data...'}</p>
+                  <p className="text-sm">{message.text}</p>
+                  <p className="text-xs text-gray-400 mt-1">{message.time}</p>
                 </div>
               ))}
             </div>
@@ -187,11 +220,11 @@ const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, 
                 className="w-20 h-20 rounded-full mx-auto mb-3"
               />
               <div className="flex justify-center space-x-2 mb-3">
-                {steps.map((step, idx) => (
+                {mockProfileData.dominantColors.map((color, idx) => (
                   <div
                     key={idx}
                     className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: step.id === 'profile' ? '#4169E1' : '#8B4513' }}
+                    style={{ backgroundColor: color }}
                   />
                 ))}
               </div>
@@ -201,12 +234,12 @@ const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, 
               <div>
                 <h4 className="text-sm font-medium text-gray-400 mb-2">Bio Keywords</h4>
                 <div className="flex flex-wrap gap-2">
-                  {steps.map((step, idx) => (
+                  {mockProfileData.interests.map((interest, idx) => (
                     <span
                       key={idx}
                       className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs"
                     >
-                      {step.id === 'profile' ? '#' + step.label : ''}
+                      #{interest}
                     </span>
                   ))}
                 </div>

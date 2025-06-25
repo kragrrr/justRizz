@@ -1,8 +1,8 @@
+
 import React, { useState } from 'react';
-import { ArrowLeft, Copy, RefreshCw, TrendingUp, Lightbulb, Heart, Coffee, Mountain, Send, Loader2, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Copy, RefreshCw, TrendingUp, Lightbulb, Heart, Coffee, Mountain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { sendMessage } from '@/lib/utils';
 
 interface Contact {
   id: string;
@@ -29,9 +29,6 @@ interface ResultsScreenProps {
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isRegenerating, setIsRegenerating] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [sendSuccess, setSendSuccess] = useState(false);
-  const [sendError, setSendError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const copyToClipboard = async (text: string) => {
@@ -56,22 +53,6 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
       setCurrentLineIndex((prev) => (prev + 1) % data.pickupLines.length);
       setIsRegenerating(false);
     }, 1500);
-  };
-
-  const handleSendPickupLine = async () => {
-    setIsSending(true);
-    setSendSuccess(false);
-    setSendError(null);
-    try {
-      await sendMessage(contact.username, data.pickupLines[currentLineIndex]);
-      setIsSending(false);
-      setSendSuccess(true);
-      setTimeout(() => setSendSuccess(false), 2000);
-    } catch (err: any) {
-      setIsSending(false);
-      setSendError(err.message || 'Failed to send message');
-      setTimeout(() => setSendError(null), 3000);
-    }
   };
 
   const getRizzGrade = (score: number) => {
@@ -146,7 +127,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
             </p>
           </div>
 
-          <div className="flex space-x-3 mb-2">
+          <div className="flex space-x-3">
             <Button
               onClick={() => copyToClipboard(data.pickupLines[currentLineIndex])}
               className="flex-1 bg-pink-500 hover:bg-pink-600 text-white"
@@ -164,25 +145,6 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
               <RefreshCw className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''}`} />
             </Button>
           </div>
-
-          <Button
-            onClick={handleSendPickupLine}
-            className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white flex items-center justify-center"
-            disabled={isSending || isRegenerating}
-          >
-            {isSending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-            {isSending ? 'Sending...' : 'Send to Instagram'}
-          </Button>
-          {sendSuccess && (
-            <div className="flex items-center justify-center text-green-400 mt-2 text-sm">
-              <CheckCircle className="w-4 h-4 mr-1" /> Sent!
-            </div>
-          )}
-          {sendError && (
-            <div className="flex items-center justify-center text-red-400 mt-2 text-sm">
-              {sendError}
-            </div>
-          )}
         </div>
 
         {/* Insights Section */}
