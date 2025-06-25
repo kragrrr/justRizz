@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import LoginScreen from '../components/LoginScreen';
 import ContactList from '../components/ContactList';
@@ -26,8 +27,15 @@ const Index = () => {
     setCurrentScreen('contacts');
   };
 
-  const handleContactSelect = (contact: SelectedContact) => {
-    setSelectedContact(contact);
+  const handleContactSelect = (contact: Contact, messages?: any[]) => {
+    const selectedContact: SelectedContact = {
+      id: contact.id || contact.username,
+      username: contact.username,
+      avatar: contact.avatar,
+      lastChat: contact.lastChat || '',
+      rizzScore: contact.rizzScore || 0
+    };
+    setSelectedContact(selectedContact);
     setCurrentScreen('analysis');
   };
 
@@ -51,7 +59,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
       {currentScreen === 'login' && <LoginScreen onLogin={handleLogin} />}
       {currentScreen === 'contacts' && sessionToken && (
         <ContactList sessionToken={sessionToken} onContactSelect={handleContactSelect} onBack={handleBack} />
