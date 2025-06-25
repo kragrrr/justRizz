@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Instagram, Eye, EyeOff, Loader2, Shield } from 'lucide-react';
+import { User, Eye, EyeOff, Loader2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/utils';
@@ -38,20 +39,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex justify-center mb-4">
-          <div className="w-20 h-20 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-            <Instagram className="w-10 h-10 text-white" />
-          </div>
+          <img 
+            src="/lovable-uploads/539d1779-6800-4152-b968-e4e6f4ef03b1.png" 
+            alt="justRizz Logo" 
+            className="w-32 h-auto"
+          />
         </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-          justRizz
-        </h1>
         <p className="text-gray-300 mt-2">AI-powered Instagram dating coach</p>
       </div>
 
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto w-full">
         <div className="relative">
-          <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <Input
             type="text"
             placeholder="Instagram username"
