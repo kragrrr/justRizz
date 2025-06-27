@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, MessageSquare, User, Zap, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { analyzeContact } from '@/lib/utils';
+import { analyzeMessages } from '@/lib/utils';
 
 interface Contact {
   id: string;
@@ -65,34 +65,25 @@ const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ contact, sessionToken, 
       setSteps(prev => prev.map((step, idx) => idx === 0 ? { ...step, status: 'processing' } : step));
       setProgress(10);
       try {
-        const result = await analyzeContact(sessionToken, contact.username);
+        // Call the new chat analysis endpoint
+        const result = await analyzeMessages(contact.id);
         if (!isMounted) return;
         setSteps(prev => prev.map((step, idx) => idx === 0 ? { ...step, status: 'complete' } : step));
-        setProgress(33);
-        setCurrentStep(1);
-        setSteps(prev => prev.map((step, idx) => idx === 1 ? { ...step, status: 'processing' } : step));
-        setProgress(66);
-        setCurrentStep(2);
-        setSteps(prev => prev.map((step, idx) => idx === 1 ? { ...step, status: 'complete' } : step));
-        setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'processing' } : step));
-        setProgress(90);
-        setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'complete' } : step));
         setProgress(100);
-        // Adapt backend result to expected frontend format
-        const analysisResult = {
-          messages: result.chat_history?.map((text: string) => ({ sender: 'them', text, time: '', sentiment: 'neutral' })) || [],
-          profile: {
-            bio: result.profile?.bio || '',
-            interests: result.profile?.bio_keywords || [],
-            dominantColors: result.profile?.color_palette || []
-          },
-          rizzScore: result.rizz_score || 0,
-          insights: result.insights || [],
-          pickupLines: result.pickup_lines || []
-        };
-        onAnalysisComplete(analysisResult);
+        // Pass the analysis result up
+        onAnalysisComplete({
+          messages: [], // You can adapt this if you want to show message details
+          profile: { bio: '', interests: [], dominantColors: [] },
+          rizzScore: 0,
+          insights: [
+            `Total messages: ${result.message_count}`,
+            `Total words: ${result.word_count}`,
+            `Most common words: ${result.most_common_words.map(([w, c]) => `${w} (${c})`).join(', ')}`,
+            `Sentiment: ${result.sentiment}`
+          ],
+          pickupLines: []
+        });
       } catch (err) {
-        // TODO: handle error UI
         setProgress(100);
         setSteps(prev => prev.map((step, idx) => idx === 2 ? { ...step, status: 'complete' } : step));
         onAnalysisComplete({

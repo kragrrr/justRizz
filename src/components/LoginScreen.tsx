@@ -34,30 +34,22 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 bg-gradient-to-br from-purple-900 via-pink-900 to-orange-800">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-black">
       {/* Header */}
       <div className="text-center mb-12">
-        <div className="flex justify-center mb-4">
-          <div className="w-20 h-20 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-            <Instagram className="w-10 h-10 text-white" />
-          </div>
-        </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-          justRizz
-        </h1>
-        <p className="text-gray-300 mt-2">AI-powered Instagram dating coach</p>
+        <h1 className="text-4xl font-bold text-white mb-2">justRizz</h1>
+        <p className="text-gray-400">AI-powered Instagram dating coach</p>
       </div>
 
       {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto w-full">
+      <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto w-full bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-lg">
         <div className="relative">
-          <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <Input
             type="text"
             placeholder="Instagram username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="pl-12 bg-gray-900/50 border-gray-700 text-white placeholder-gray-400 focus:border-pink-500"
+            className="bg-black border-gray-800 text-white placeholder-gray-500 focus:border-white"
             required
           />
         </div>
@@ -68,13 +60,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="pr-12 bg-gray-900/50 border-gray-700 text-white placeholder-gray-400 focus:border-pink-500"
+            className="pr-12 bg-black border-gray-800 text-white placeholder-gray-500 focus:border-white"
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white"
           >
             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
@@ -86,7 +78,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-medium py-3"
+          className="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-200 transition-colors border border-gray-800"
         >
           {isLoading ? (
             <>
@@ -100,13 +92,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       </form>
 
       {/* Security Disclaimer */}
-      <div className="flex items-center justify-center mt-8 text-sm text-gray-400">
+      <div className="flex items-center justify-center mt-8 text-sm text-gray-500">
         <Shield className="w-4 h-4 mr-2" />
         <span>Credentials encrypted end-to-end</span>
       </div>
 
       {/* Footer */}
-      <div className="text-center mt-12 text-xs text-gray-500">
+      <div className="text-center mt-12 text-xs text-gray-600">
         <p>By connecting, you agree to our Terms of Service</p>
         <p className="mt-1">Your data is processed securely and privately</p>
       </div>

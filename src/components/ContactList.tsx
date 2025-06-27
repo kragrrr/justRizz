@@ -208,19 +208,19 @@ const ContactList: React.FC<ContactListProps> = ({ sessionToken, onContactSelect
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="ml-2"
+            className="ml-2 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:text-white"
             style={{ opacity: 1, visibility: 'visible' }}
           >
-            {isRefreshing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            {isRefreshing ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <RefreshCw className="w-4 h-4 text-white" />}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setShowNewChat(true)}
-            className="ml-2"
+            className="ml-2 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:text-white"
             style={{ opacity: 1, visibility: 'visible' }}
           >
-            <UserPlus className="w-4 h-4 mr-1" /> New Chat
+            <UserPlus className="w-4 h-4 mr-1 text-white" /> New Chat
           </Button>
         </div>
         {/* Search Bar */}

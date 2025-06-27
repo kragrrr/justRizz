@@ -113,69 +113,61 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
 
       <div className="p-4 space-y-6">
         {/* Rizz Score Display */}
-        <div className="text-center">
-          <div className={`inline-flex items-center justify-center w-32 h-32 rounded-full ${rizzGrade.bg} border-4 border-current ${rizzGrade.color} mb-4`}>
+        <div className="text-center mb-6">
+          <div className="w-32 h-32 rounded-full border border-gray-800 flex items-center justify-center mx-auto mb-2">
             <div className="text-center">
-              <div className="text-3xl font-bold">{data.rizzScore}%</div>
-              <div className="text-sm opacity-80">Rizz</div>
+              <div className="text-3xl font-bold text-white">{data.rizzScore}%</div>
+              <div className="text-sm text-gray-400">Rizz</div>
             </div>
           </div>
-          
-          <div className={`inline-block px-4 py-2 rounded-full ${rizzGrade.bg} ${rizzGrade.color} font-medium`}>
-            Grade: {rizzGrade.grade}
-          </div>
+          <div className="text-white text-base font-medium">Grade: {rizzGrade.grade}</div>
         </div>
 
         {/* Pickup Line Section */}
-        <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-lg p-6">
-          <h3 className="font-medium mb-4 flex items-center text-pink-400">
-            <Heart className="w-5 h-5 mr-2" />
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-6">
+          <h3 className="font-medium mb-4 flex items-center text-white">
+            <Heart className="w-5 h-5 mr-2 text-gray-400" />
             AI-Generated Pickup Line
           </h3>
-          
-          <div className="bg-black/30 rounded-lg p-4 mb-4">
-            <p className="text-lg leading-relaxed">
-              {isRegenerating ? (
-                <span className="flex items-center text-gray-400">
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Generating new line...
-                </span>
-              ) : (
-                data.pickupLines[currentLineIndex]
-              )}
-            </p>
+          <div className="bg-black rounded-lg p-4 mb-4 text-white min-h-[40px] flex items-center">
+            {isRegenerating ? (
+              <span className="flex items-center text-gray-400">
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin text-gray-400" />
+                Generating new line...
+              </span>
+            ) : (
+              data.pickupLines[currentLineIndex]
+            )}
           </div>
-
           <div className="flex space-x-3 mb-2">
             <Button
               onClick={() => copyToClipboard(data.pickupLines[currentLineIndex])}
-              className="flex-1 bg-pink-500 hover:bg-pink-600 text-white"
+              className="flex-1 bg-gray-900 border border-gray-800 text-white hover:border-white"
               disabled={isRegenerating}
             >
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy className="w-4 h-4 mr-2 text-gray-400" />
               Copy to Clipboard
             </Button>
             <Button
               onClick={regenerateLine}
               variant="outline"
-              className="px-4 border-gray-600 text-gray-300 hover:bg-gray-800"
+              className="px-4 border border-gray-800 text-white hover:border-white"
               disabled={isRegenerating}
             >
-              <RefreshCw className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''} text-gray-400`} />
             </Button>
           </div>
-
           <Button
             onClick={handleSendPickupLine}
-            className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white flex items-center justify-center"
+            className="w-full mt-2 bg-gray-900 border border-gray-800 text-white hover:border-white flex items-center justify-center"
             disabled={isSending || isRegenerating}
           >
-            {isSending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
+            {isSending ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-gray-400" /> : <Send className="w-4 h-4 mr-2 text-gray-400" />}
             {isSending ? 'Sending...' : 'Send to Instagram'}
           </Button>
           {sendSuccess && (
-            <div className="flex items-center justify-center text-green-400 mt-2 text-sm">
-              <CheckCircle className="w-4 h-4 mr-1" /> Sent!
+            <div className="flex items-center justify-center text-white mt-2 text-sm">
+              <CheckCircle className="w-4 h-4 mr-1 text-gray-400" /> Sent!
             </div>
           )}
           {sendError && (
@@ -186,64 +178,49 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
         </div>
 
         {/* Insights Section */}
-        <div className="bg-gray-900/30 rounded-lg p-6">
-          <h3 className="font-medium mb-4 flex items-center text-blue-400">
-            <Lightbulb className="w-5 h-5 mr-2" />
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-6">
+          <h3 className="font-medium mb-4 flex items-center text-white">
+            <Lightbulb className="w-5 h-5 mr-2 text-gray-400" />
             Conversation Insights
           </h3>
-          
           <div className="space-y-3">
             {data.insights.map((insight, idx) => (
-              <div key={idx} className="flex items-start space-x-3 p-3 bg-blue-500/5 border border-blue-500/10 rounded-lg">
-                <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <TrendingUp className="w-3 h-3 text-blue-400" />
+              <div key={idx} className="flex items-start space-x-3 p-3 bg-black border border-gray-800 rounded-lg">
+                <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <TrendingUp className="w-3 h-3 text-gray-400" />
                 </div>
-                <p className="text-sm text-gray-300">{insight}</p>
+                <span className="text-white text-sm">{insight}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-gray-900/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-green-400 mb-1">92%</div>
-            <div className="text-xs text-gray-400">Response Rate</div>
+        {/* Stat Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-center">
+            <div className="text-xl font-bold text-white">92%</div>
+            <div className="text-xs text-gray-400 mt-1">Response Rate</div>
           </div>
-          <div className="bg-gray-900/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-blue-400 mb-1">2.5x</div>
-            <div className="text-xs text-gray-400">Faster than Avg</div>
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-center">
+            <div className="text-xl font-bold text-white">2.5x</div>
+            <div className="text-xs text-gray-400 mt-1">Faster than Avg</div>
           </div>
-          <div className="bg-gray-900/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-purple-400 mb-1">15</div>
-            <div className="text-xs text-gray-400">Common Interests</div>
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-center">
+            <div className="text-xl font-bold text-white">15</div>
+            <div className="text-xs text-gray-400 mt-1">Common Interests</div>
           </div>
-          <div className="bg-gray-900/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-pink-400 mb-1">High</div>
-            <div className="text-xs text-gray-400">Compatibility</div>
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-center">
+            <div className="text-xl font-bold text-white">High</div>
+            <div className="text-xs text-gray-400 mt-1">Compatibility</div>
           </div>
         </div>
 
         {/* Interest Tags */}
-        <div className="bg-gray-900/30 rounded-lg p-4">
-          <h4 className="font-medium mb-3 text-gray-300">Shared Interests</h4>
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <h4 className="font-medium mb-3 text-white">Shared Interests</h4>
           <div className="flex flex-wrap gap-2">
-            <span className="flex items-center px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
-              <Mountain className="w-3 h-3 mr-1" />
-              Hiking
-            </span>
-            <span className="flex items-center px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-sm">
-              <Coffee className="w-3 h-3 mr-1" />
-              Coffee
-            </span>
-            {data.profile.interests.slice(2).map((interest, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm"
-              >
-                #{interest}
-              </span>
-            ))}
+            <span className="px-3 py-1 rounded-full bg-gray-800 text-white text-xs flex items-center">Hiking</span>
+            <span className="px-3 py-1 rounded-full bg-gray-800 text-white text-xs flex items-center">Coffee</span>
           </div>
         </div>
       </div>

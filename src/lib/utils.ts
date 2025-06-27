@@ -137,3 +137,12 @@ export async function getUsernameFromUserId(user_id: string): Promise<any> {
   if (!response.ok) throw new Error('Failed to get username from user id');
   return response.json();
 }
+
+export async function analyzeMessages(thread_id: string): Promise<any> {
+  const response = await fetch(`${API_BASE}/analyze_messages?thread_id=${encodeURIComponent(thread_id)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!response.ok) throw new Error('Failed to analyze messages');
+  return response.json();
+}
