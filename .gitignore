@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+bin
+lib
+include
+pyvenv.cfg
+*__pycache__*
+*.db
+.env

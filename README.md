@@ -20,33 +20,28 @@ cd justRizz
 
 ### 2. Install Python Dependencies
 ```bash
-cd instagram_dm_mcp
 pip install -r requirements.txt
 ```
 
-### 3. Install Node.js Dependencies (for frontend, if needed)
+### 3. Install Node.js Dependencies (for frontend)
 ```bash
-cd ..
 npm install
 ```
 
-### 4. Environment Variables
-Create a `.env` file in the `instagram_dm_mcp` directory with the following:
+### 4. Environment Variables (Optional)
+If you want to use the Perplexity AI features, create a `.env` file in the project root with:
 ```
-INSTAGRAM_USERNAME=your_instagram_username
-INSTAGRAM_PASSWORD=your_instagram_password
 PERPLEXITY_API_KEY=your_perplexity_api_key
 ```
-- `INSTAGRAM_USERNAME` and `INSTAGRAM_PASSWORD`: Your Instagram credentials for automation (never share these).
 - `PERPLEXITY_API_KEY`: Your API key from [Perplexity AI](https://docs.perplexity.ai/guides/getting-started).
 
 ### 5. Run the Backend Server
+Run the backend with your Instagram credentials (these are required as command-line arguments):
 ```bash
-cd instagram_dm_mcp
-python src/mcp_server.py --username $INSTAGRAM_USERNAME --password $INSTAGRAM_PASSWORD
+python src/mcp_server.py --username <your_instagram_username> --password <your_instagram_password>
 ```
 
-### 6. Run the Frontend (if applicable)
+### 6. Run the Frontend
 ```bash
 npm run dev
 ```
@@ -73,7 +68,7 @@ npm run dev
 - API keys and passwords should be kept secret and out of version control.
 
 ## License
-See [LICENSE](./instagram_dm_mcp/LICENSE).
+See [LICENSE](./LICENSE).
 
 ## Credits
 - [Perplexity AI](https://docs.perplexity.ai/)
