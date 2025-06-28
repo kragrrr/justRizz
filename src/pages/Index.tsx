@@ -19,7 +19,6 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Contact[]>([]);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [analysisType, setAnalysisType] = useState<'profile' | 'chat' | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -55,17 +54,6 @@ const Index = () => {
     setIsSearching(false);
   };
 
-  // Select user from search
-  const handleSelectContact = (contact: Contact) => {
-    setSelectedContact(contact);
-  };
-
-  // Analysis button handler
-  const handleAnalysis = (type: 'profile' | 'chat') => {
-    setAnalysisType(type);
-    setCurrentScreen('analysis');
-  };
-
   // Analysis complete handler (pass-through)
   const handleAnalysisComplete = (data: AnalysisResult) => {
     setAnalysisData(data);
@@ -85,12 +73,10 @@ const Index = () => {
         break;
       case 'analysis':
         setCurrentScreen('search');
-        setAnalysisType(null);
         break;
       case 'results':
         setCurrentScreen('search');
         setAnalysisData(null);
-        setAnalysisType(null);
         break;
     }
   };
@@ -131,7 +117,7 @@ const Index = () => {
                     <Card
                       key={contact.id || contact.username}
                       className={`w-full cursor-pointer bg-gray-900 border border-gray-800 hover:border-white transition-all ${selectedContact?.username === contact.username ? 'ring-2 ring-white' : ''}`}
-                      onClick={() => handleSelectContact(contact)}
+                      onClick={() => setSelectedContact(contact)}
                     >
                       <CardContent className="flex items-center space-x-4 py-4">
                         <Avatar>
@@ -148,34 +134,27 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            {/* Analysis Buttons */}
-            <div className="fixed bottom-0 left-0 w-full flex flex-col items-center pb-8 bg-black z-10">
-              <div className="w-full max-w-md flex space-x-4 justify-center">
-                <Button
-                  className="flex-1 py-4 text-lg bg-gray-900 border border-gray-800 text-white hover:bg-gray-800 hover:border-white transition-colors rounded-lg"
-                  disabled={!selectedContact}
-                  onClick={() => selectedContact && handleAnalysis('profile')}
-                >
-                  Profile Analysis
-                </Button>
-                <Button
-                  className="flex-1 py-4 text-lg bg-gray-900 border border-gray-800 text-white hover:bg-gray-800 hover:border-white transition-colors rounded-lg"
-                  disabled={!selectedContact}
-                  onClick={() => selectedContact && handleAnalysis('chat')}
-                >
-                  Chat Analysis
-                </Button>
+            {/* Restore Analyse Button */}
+            {selectedContact && (
+              <div className="fixed bottom-0 left-0 w-full flex flex-col items-center pb-8 bg-black z-10">
+                <div className="w-full max-w-md flex justify-center">
+                  <Button
+                    className="flex-1 py-4 text-lg bg-gray-900 border border-gray-800 text-white hover:bg-gray-800 hover:border-white transition-colors rounded-lg"
+                    onClick={() => setCurrentScreen('analysis')}
+                  >
+                    Analyse
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
-        {currentScreen === 'analysis' && selectedContact && sessionToken && analysisType && (
+        {currentScreen === 'analysis' && selectedContact && sessionToken && (
           <AnalysisScreen
             contact={selectedContact}
             sessionToken={sessionToken}
             onAnalysisComplete={handleAnalysisComplete}
             onBack={handleBack}
-            analysisType={analysisType}
           />
         )}
         {currentScreen === 'results' && selectedContact && analysisData && (
