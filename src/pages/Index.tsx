@@ -6,7 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import { Search } from 'lucide-react';
 import { fetchContacts } from '../lib/utils';
-import type { Contact, AnalysisResult } from '../lib/utils';
+import type { Contact as AppContact, AnalysisResult } from '../lib/utils';
 import AnalysisScreen from '../components/AnalysisScreen';
 import ResultsScreen from '../components/ResultsScreen';
 
@@ -15,17 +15,21 @@ type Screen = 'login' | 'search' | 'analysis' | 'results';
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [sessionToken, setSessionToken] = useState<string | null>(null);
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [contacts, setContacts] = useState<AppContact[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Contact[]>([]);
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [searchResults, setSearchResults] = useState<AppContact[]>([]);
+  const [selectedContact, setSelectedContact] = useState<AppContact | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisResult | null>(null);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [igUsername, setIgUsername] = useState<string | null>(null);
+  const [igPassword, setIgPassword] = useState<string | null>(null);
 
   // Login handler
-  const handleLogin = async (token: string) => {
+  const handleLogin = async (token: string, username: string, password: string) => {
     setSessionToken(token);
+    setIgUsername(username);
+    setIgPassword(password);
     setCurrentScreen('search');
     setIsLoadingContacts(true);
     try {
@@ -157,10 +161,12 @@ const Index = () => {
             onBack={handleBack}
           />
         )}
-        {currentScreen === 'results' && selectedContact && analysisData && (
+        {currentScreen === 'results' && selectedContact && analysisData && igUsername && igPassword && (
           <ResultsScreen
             contact={selectedContact}
             data={analysisData}
+            igUsername={igUsername}
+            igPassword={igPassword}
             onBack={handleBack}
           />
         )}

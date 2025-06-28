@@ -23,10 +23,12 @@ interface AnalysisData {
 interface ResultsScreenProps {
   contact: Contact;
   data: AnalysisData;
+  igUsername: string;
+  igPassword: string;
   onBack: () => void;
 }
 
-const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) => {
+const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, igUsername, igPassword, onBack }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -63,7 +65,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ contact, data, onBack }) 
     setSendSuccess(false);
     setSendError(null);
     try {
-      await sendMessage(contact.username, data.pickupLines[currentLineIndex]);
+      await sendMessage(igUsername, igPassword, contact.username, data.pickupLines[currentLineIndex]);
       setIsSending(false);
       setSendSuccess(true);
       setTimeout(() => setSendSuccess(false), 2000);

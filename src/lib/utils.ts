@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export interface Contact {
-  id?: string;
+  id: string;
   username: string;
   avatar: string;
   lastChat: string;
@@ -70,11 +70,16 @@ export async function fetchContacts(sessionToken: string): Promise<Contact[]> {
   return data.contacts || [];
 }
 
-export async function sendMessage(username: string, message: string): Promise<any> {
+export async function sendMessage(
+  ig_username: string,
+  ig_password: string,
+  username: string,
+  message: string
+): Promise<any> {
   const response = await fetch(`${API_BASE}/send_message`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, message })
+    body: JSON.stringify({ ig_username, ig_password, username, message })
   });
   if (!response.ok) throw new Error('Failed to send message');
   return response.json();

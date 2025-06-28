@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { login } from '@/lib/utils';
 
 interface LoginScreenProps {
-  onLogin: (sessionToken: string) => void;
+  onLogin: (sessionToken: string, username: string, password: string) => void;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
@@ -22,7 +22,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     try {
       const sessionToken = await login(username, password);
       setIsLoading(false);
-      onLogin(sessionToken);
+      onLogin(sessionToken, username, password);
     } catch (err: unknown) {
       setIsLoading(false);
       if (err instanceof Error) {
